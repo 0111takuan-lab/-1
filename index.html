@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>0120' Learning OS Ver.1.0</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif;color:#19352b;background:#f3f7f4}*{box-sizing:border-box}body{margin:0}main{max-width:680px;margin:auto;padding:28px 16px 70px}.eyebrow{font-size:12px;letter-spacing:.14em;font-weight:800;color:#41846a}h1{font-size:clamp(28px,7vw,38px);margin:7px 0 8px;letter-spacing:-.035em}h2{font-size:21px;margin:0 0 12px}p{line-height:1.7;color:#65776f;margin:0}.card{background:#fff;border:1px solid #dce7e0;border-radius:22px;padding:21px;margin-top:20px;box-shadow:0 6px 22px #1b4e2b09}.fieldlabel{display:block;font-size:15px;font-weight:800;margin-bottom:10px}input[type=text],textarea{width:100%;border:1.5px solid #c9d9d0;border-radius:14px;padding:15px;font:inherit;color:#1c392e;background:#fff;outline:none}input:focus,textarea:focus{border-color:#3e8b6c;box-shadow:0 0 0 3px #3e8b6c20}textarea{min-height:185px;resize:vertical;line-height:1.7}.hint{background:#edf5ef;border-radius:14px;padding:14px 16px;margin:14px 0 20px;font-size:14px;line-height:1.65;color:#486859}.sub{font-size:12px;color:#7a8d82;margin-top:9px}.tabstate{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:20px}.tab{cursor:pointer;background:#e6ede8;border:1px solid transparent;border-radius:15px;text-align:center;padding:14px 3px;color:#254537;font-size:12px;font-weight:700;user-select:none}.tab strong{display:block;font-size:25px;line-height:1.2;margin-bottom:5px}.panel{display:none}.panel h2{margin:0;font-size:23px}.panel .step{font-size:12px;color:#438467;font-weight:800;margin-bottom:6px;letter-spacing:.05em}.next{display:flex;justify-content:flex-end;margin-top:18px}.next label{background:#327b5e;color:#fff;padding:13px 17px;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer}.note{margin-top:18px;font-size:12px;color:#62776c;line-height:1.8}.footer{margin-top:24px;text-align:center;color:#85958a;font-size:12px}#s0:checked~.tabs label[for=s0],#s1:checked~.tabs label[for=s1],#s2:checked~.tabs label[for=s2],#s3:checked~.tabs label[for=s3]{background:#327b5e;color:#fff}#s0:checked~.panels #p0,#s1:checked~.panels #p1,#s2:checked~.panels #p2,#s3:checked~.panels #p3{display:block}.actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:15px}button{border:0;border-radius:12px;padding:12px 15px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;touch-action:manipulation}button.primary{background:#327b5e;color:white}button.secondary{background:#e6ede8;color:#254537}button.danger{background:#fff1ef;color:#a33c36}button:active{opacity:.78}.status{font-size:13px;color:#4c7260;line-height:1.6}.current{font-size:13px;color:#327b5e;font-weight:700;margin-top:10px}.history{display:grid;gap:12px;margin-top:16px}.entry{border:1px solid #dce7e0;border-radius:15px;padding:15px;background:#fbfdfb}.entry.active{border-color:#327b5e;background:#f0f7f2}.entry-title{font-weight:800;overflow-wrap:anywhere}.entry-meta{font-size:12px;color:#6e8075;margin-top:6px}.entry .actions{margin-top:10px}.empty{font-size:14px;color:#74877b;padding:12px 0}.tag{display:inline-block;background:#e7f1e9;color:#327b5e;border-radius:99px;padding:3px 8px;font-size:11px;margin-left:7px}.backup{font-size:12px;color:#74877b;margin-top:10px}#saveStatus[role=status]{min-height:1.5em}
+
+.dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:16px}.metric{background:#edf5ef;border-radius:14px;padding:14px 8px;text-align:center}.metric strong{display:block;font-size:24px;color:#27684e}.metric span{font-size:11px;color:#557367;font-weight:700}.progress-track{height:12px;border-radius:20px;background:#e4ece7;overflow:hidden;margin:12px 0 8px}.progress-fill{height:100%;width:0;background:#327b5e;border-radius:20px;transition:width .2s}.progress-text{font-size:13px;font-weight:800;color:#327b5e}.step-dots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:13px}.step-dot{text-align:center;background:#edf1ee;border-radius:10px;padding:9px 3px;font-size:11px;font-weight:800;color:#708278}.step-dot.done{background:#dcefe2;color:#28684f}.entry-progress{margin-top:11px}.entry-progress .progress-track{height:8px;margin:6px 0}.entry-progress .progress-text{font-size:12px}@media(max-width:360px){.dashboard-grid{gap:5px}.metric strong{font-size:20px}.metric span{font-size:10px}}
+
+.review-grid{display:grid;gap:11px;margin-top:16px}.review-item{border:1px solid #dce7e0;background:#fbfdfb;border-radius:14px;padding:15px}.review-heading{font-size:13px;font-weight:800;color:#327b5e;margin-bottom:9px}.review-content{font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;color:#253f32}.review-content.missing{color:#88968d}.review-summary{margin-top:15px;padding:14px;border-radius:14px;background:#edf5ef;line-height:1.7;font-size:14px}.review-question{font-size:13px;color:#5b7365;margin-top:10px}.review-actions{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+
+.guide-panel{border:1px solid #d7e7db;background:#f6faf7;border-radius:18px;padding:17px;margin-top:17px}.guide-panel h3{font-size:17px;margin:0 0 7px}.guide-intro{font-size:13px;color:#60786b;line-height:1.6;margin:0 0 12px}.guide-questions{display:grid;gap:9px}.guide-question{width:100%;text-align:left;background:white;color:#25513d;border:1px solid #d2e3d7;border-radius:12px;padding:12px;font-size:14px;line-height:1.5;font-weight:650;cursor:pointer}.guide-question:active{background:#e4f1e9}.guide-help{font-size:12px;color:#5d7869;margin-top:10px;line-height:1.6}.guide-feedback{font-size:13px;color:#27684e;font-weight:700;min-height:1.5em;margin-top:7px}
+.history-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.history-tools input,.history-tools select{width:100%;padding:12px;border:1px solid #cadbd0;border-radius:12px;background:white;color:#19352b;font-size:15px}.history-tools label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}.history-summary{font-size:13px;color:#5c7166;margin:0 0 12px}.import-wrap{margin-top:14px;border-top:1px solid #e1e9e3;padding-top:15px}.import-wrap input{max-width:100%;font-size:14px}.safety-note{font-size:12px;line-height:1.6;color:#61766a;margin-top:9px}@media(max-width:390px){.history-tools{grid-template-columns:1fr}}
+
+/* Ver.1.0: 4段階の思考プロセスマップ */
+.process-map{display:grid;gap:0;margin-top:17px}.process-node{border:1.5px solid #d9e6dc;background:#fbfdfb;border-radius:17px;padding:16px;min-width:0}.process-node.filled{border-color:#76ad8c;background:#f0f8f2}.process-node .process-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.process-node .process-name{font-weight:850;color:#245d45;font-size:16px}.process-node .process-state{font-size:11px;font-weight:800;border-radius:20px;padding:4px 9px;background:#e9eeea;color:#687b6e;white-space:nowrap}.process-node.filled .process-state{background:#d6ebdc;color:#256447}.process-node .process-excerpt{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.65;color:#3c5648;margin:11px 0 12px;max-height:6.7em;overflow:hidden}.process-node .process-excerpt.empty{color:#84958b}.process-node button{font-size:12px;padding:8px 12px}.process-connector{display:flex;justify-content:center;align-items:center;min-height:30px;color:#4d8a6c;font-size:23px;font-weight:800}.process-loop{margin-top:13px;border:1px dashed #8fb5a0;border-radius:14px;padding:12px;text-align:center;color:#3c7756;font-size:13px;font-weight:750;background:#f5faf6}.process-summary{margin-top:14px;padding:13px 14px;background:#edf5ef;border-radius:13px;font-size:13px;line-height:1.7;color:#315e46}.process-note{font-size:12px;color:#657d6e;margin-top:10px;line-height:1.7}
+</style>
+<meta name="theme-color" content="#327b5e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="0120 Learning OS">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+</head>
+<body>
+<main>
+<div class="eyebrow">STUDY FRAMEWORK / VER. 1.0</div>
+<h1>0120' Learning OS</h1>
+<p>疑問を受け止め、論理的に整理し、理解を確かめ、自分の言葉で統合する。</p>
+<section class="card"><label class="fieldlabel" for="topic">今回の学習テーマ</label><input id="topic" type="text" placeholder="例：一次関数の仕組み"><div class="sub">学習テーマと4段階のメモを、ひとつの記録として管理します。</div><div id="currentRecord" class="current">新しい学習（未登録）</div></section>
+<input class="tabstate" type="radio" name="stage" id="s0" checked>
+<input class="tabstate" type="radio" name="stage" id="s1">
+<input class="tabstate" type="radio" name="stage" id="s2">
+<input class="tabstate" type="radio" name="stage" id="s3">
+<nav class="tabs" aria-label="学習段階"><label for="s0" class="tab"><strong>0</strong>受容</label><label for="s1" class="tab"><strong>1</strong>論理化</label><label for="s2" class="tab"><strong>2</strong>メタ認知</label><label for="s3" class="tab"><strong>0'</strong>統合</label></nav>
+<div class="panels">
+<section class="card panel" id="p0"><div class="step">STEP 01 / ACCEPT</div><h2>0｜受容</h2><div class="hint">何が分からない？ どこが気になる？ まずは判断せず、疑問を書き出そう。</div><div class="guide-panel"><h3>考えるための質問ガイド</h3><p class="guide-intro">書き始めに迷ったら、質問を選んでください。</p><div class="guide-questions"><button type="button" class="guide-question" data-guide="0" data-q="0">今、何が一番分からない？</button><button type="button" class="guide-question" data-guide="0" data-q="1">どこまでなら自分で説明できる？</button><button type="button" class="guide-question" data-guide="0" data-q="2">このテーマで知りたいことは何？</button></div><div class="guide-help">タップすると、選んだ質問を下の学習メモに追記します。既存の文章は消えません。</div><div class="guide-feedback" id="guideStatus0" role="status"></div></div><label class="fieldlabel" for="memo0">学習メモ</label><textarea id="memo0" placeholder="今感じている疑問や、知りたいことを書く"></textarea><div class="next"><label for="s1">1｜論理化へ →</label></div></section>
+<section class="card panel" id="p1"><div class="step">STEP 02 / ORGANIZE</div><h2>1｜論理化</h2><div class="hint">分かっている事実、条件、理由を分けて整理しよう。まだ確かでないことも区別しよう。</div><div class="guide-panel"><h3>考えるための質問ガイド</h3><p class="guide-intro">書き始めに迷ったら、質問を選んでください。</p><div class="guide-questions"><button type="button" class="guide-question" data-guide="1" data-q="0">確かに分かっている事実は何？</button><button type="button" class="guide-question" data-guide="1" data-q="1">情報を条件・理由・結論に分けると？</button><button type="button" class="guide-question" data-guide="1" data-q="2">まだ確認できていない前提は何？</button></div><div class="guide-help">タップすると、選んだ質問を下の学習メモに追記します。既存の文章は消えません。</div><div class="guide-feedback" id="guideStatus1" role="status"></div></div><label class="fieldlabel" for="memo1">学習メモ</label><textarea id="memo1" placeholder="情報・条件・理由を整理する"></textarea><div class="next"><label for="s2">2｜メタ認知へ →</label></div></section>
+<section class="card panel" id="p2"><div class="step">STEP 03 / REFLECT</div><h2>2｜メタ認知</h2><div class="hint">自分の言葉で説明できる？ どこでつまずく？ 説明や確認問題で理解を点検しよう。</div><div class="guide-panel"><h3>考えるための質問ガイド</h3><p class="guide-intro">書き始めに迷ったら、質問を選んでください。</p><div class="guide-questions"><button type="button" class="guide-question" data-guide="2" data-q="0">自分の言葉で説明するとどうなる？</button><button type="button" class="guide-question" data-guide="2" data-q="1">説明のどこに自信がない？</button><button type="button" class="guide-question" data-guide="2" data-q="2">別の例でも同じ考え方が使える？</button></div><div class="guide-help">タップすると、選んだ質問を下の学習メモに追記します。既存の文章は消えません。</div><div class="guide-feedback" id="guideStatus2" role="status"></div></div><label class="fieldlabel" for="memo2">学習メモ</label><textarea id="memo2" placeholder="理解できたこと・まだ不明なことを書く"></textarea><div class="next"><label for="s3">0'｜統合へ →</label></div></section>
+<section class="card panel" id="p3"><div class="step">STEP 04 / INTEGRATE</div><h2>0'｜統合</h2><div class="hint">今回学んだことを、自分の言葉でまとめよう。次に調べたいことがあれば書き添えよう。</div><div class="guide-panel"><h3>考えるための質問ガイド</h3><p class="guide-intro">書き始めに迷ったら、質問を選んでください。</p><div class="guide-questions"><button type="button" class="guide-question" data-guide="3" data-q="0">最初の疑問に今ならどう答える？</button><button type="button" class="guide-question" data-guide="3" data-q="1">今回の学びを一文でまとめると？</button><button type="button" class="guide-question" data-guide="3" data-q="2">次に調べたいことは何？</button></div><div class="guide-help">タップすると、選んだ質問を下の学習メモに追記します。既存の文章は消えません。</div><div class="guide-feedback" id="guideStatus3" role="status"></div></div><label class="fieldlabel" for="memo3">学習メモ</label><textarea id="memo3" placeholder="自分なりの結論と、次の疑問を書く"></textarea><div class="next"><label for="s0">0｜受容に戻る ↻</label></div></section>
+</div>
+<section class="card" id="processSection" aria-label="思考プロセスの可視化">
+<h2>思考プロセスマップ</h2>
+<p>学習メモの変化を、0 → 1 → 2 → 0' の流れで確認できます。入力内容はそのまま表示されます。</p>
+<div class="process-map" id="processMap">
+<div class="process-node" id="processNode0"><div class="process-top"><span class="process-name">0｜受容</span><span class="process-state" id="processState0">未記入</span></div><div class="process-excerpt empty" id="processText0">まだメモがありません</div><button type="button" class="secondary" data-process-step="0">この段階を編集</button></div>
+<div class="process-connector" aria-hidden="true">↓</div>
+<div class="process-node" id="processNode1"><div class="process-top"><span class="process-name">1｜論理化</span><span class="process-state" id="processState1">未記入</span></div><div class="process-excerpt empty" id="processText1">まだメモがありません</div><button type="button" class="secondary" data-process-step="1">この段階を編集</button></div>
+<div class="process-connector" aria-hidden="true">↓</div>
+<div class="process-node" id="processNode2"><div class="process-top"><span class="process-name">2｜メタ認知</span><span class="process-state" id="processState2">未記入</span></div><div class="process-excerpt empty" id="processText2">まだメモがありません</div><button type="button" class="secondary" data-process-step="2">この段階を編集</button></div>
+<div class="process-connector" aria-hidden="true">↓</div>
+<div class="process-node" id="processNode3"><div class="process-top"><span class="process-name">0'｜統合</span><span class="process-state" id="processState3">未記入</span></div><div class="process-excerpt empty" id="processText3">まだメモがありません</div><button type="button" class="secondary" data-process-step="3">この段階を編集</button></div>
+</div>
+<div class="process-loop">↻ 0'で整理した内容から、新しい0（疑問）へ</div>
+<div class="process-summary" id="processSummary" role="status">0/4段階に記入済み。各段階のメモを入力すると更新されます。</div>
+<div class="process-note">※ この図は思考の記録を可視化するもので、理解度や理論の正しさを自動判定するものではありません。</div>
+</section>
+<section class="card" aria-label="学習進捗ダッシュボード"><h2>学習進捗ダッシュボード</h2><p>4段階の記入状況を可視化します。記入率は理解度の評価ではありません。</p><div class="dashboard-grid"><div class="metric"><strong id="totalRecords">0</strong><span>学習記録</span></div><div class="metric"><strong id="filledStages">0</strong><span>記入済み段階</span></div><div class="metric"><strong id="averageProgress">0%</strong><span>履歴の平均記入率</span></div></div><div style="margin-top:20px;font-weight:800">現在の学習 <span id="currentProgress" class="progress-text">0%</span></div><div class="progress-track" role="progressbar" aria-label="現在の学習の記入率" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="currentTrack"><div class="progress-fill" id="currentFill"></div></div><div class="step-dots" id="stepDots"><div class="step-dot">0 受容</div><div class="step-dot">1 論理化</div><div class="step-dot">2 メタ認知</div><div class="step-dot">0' 統合</div></div><div class="sub">各段階に1文字以上のメモがあれば「記入済み」と判定します。</div></section>
+<section class="card" id="reviewSection" aria-label="学習の振り返り"><h2>学習の振り返り</h2><p>4段階のメモを並べて比較します。内容は入力に応じて更新されます。</p><div class="review-grid"><div class="review-item"><div class="review-heading">0｜最初の疑問・受容</div><div class="review-content missing" id="review0">未記入</div></div><div class="review-item"><div class="review-heading">1｜情報の整理・論理化</div><div class="review-content missing" id="review1">未記入</div></div><div class="review-item"><div class="review-heading">2｜理解の点検・メタ認知</div><div class="review-content missing" id="review2">未記入</div></div><div class="review-item"><div class="review-heading">0'｜自分の結論・統合</div><div class="review-content missing" id="review3">未記入</div></div></div><div class="review-summary" id="reviewSummary">メモを入力すると、振り返りの状況がここに表示されます。</div><div class="review-question" id="reviewQuestion">振り返りの問い：最初の疑問は、最後にどう変わった？</div><div class="review-actions"><button type="button" class="secondary" id="copyReview">振り返りをコピー</button><button type="button" class="secondary" id="jumpReview">0'｜統合を編集</button></div><div class="status" id="reviewStatus" role="status"></div><div class="sub">自動要約・理解度判定は行いません。メモの原文をそのまま表示します。</div></section>
+<section class="card" id="aiSection" aria-label="AI連携準備">
+<h2>AI分析用テキスト</h2>
+<p>4段階のメモを、AIに相談するための文章に整えます。送信は自動では行いません。内容を確認してからコピーしてください。</p>
+<div class="hint">個人名・連絡先・学校名など、AIに渡したくない情報はコピー前に削除してください。</div>
+<label class="fieldlabel" for="aiPrompt">AIに渡す文章（編集できます）</label>
+<textarea id="aiPrompt" style="min-height:300px" placeholder="「文章を生成」を押すとここに表示されます"></textarea>
+<div class="actions"><button type="button" class="primary" id="generateAI">文章を生成・更新</button><button type="button" class="secondary" id="copyAI">文章をコピー</button><button type="button" class="secondary" id="selectAI">文章を選択</button></div>
+<div class="status" id="aiStatus" role="status">まだ文章を生成していません。</div>
+<div class="sub">この機能はAI分析用の文章を作るだけです。AIへの通信、APIキー、外部サービスへの自動送信はありません。</div>
+</section>
+<section class="card"><h2>学習内容の保存</h2><p>入力中の内容を自動保存します。「記録を保存」で履歴にも登録できます。</p><div class="actions"><button type="button" class="primary" id="saveButton">記録を保存</button><button type="button" class="secondary" id="newButton">＋ 新しい学習</button></div><div id="saveStatus" class="status" role="status">保存機能を確認中…</div></section>
+<section class="card"><h2>学習履歴 <span id="count" class="tag">0件</span></h2><p>過去の記録を開いて、4段階のメモを再編集できます。</p><div class="history-tools"><div><label for="historySearch">履歴を検索</label><input id="historySearch" type="search" placeholder="テーマ・メモから検索"></div><div><label for="historySort">並び替え</label><select id="historySort"><option value="recent">更新が新しい順</option><option value="old">更新が古い順</option><option value="title">テーマ名順</option><option value="progressHigh">記入率が高い順</option><option value="progressLow">記入率が低い順</option></select></div></div><div class="history-summary" id="historySummary">履歴を読み込み中…</div><div id="history" class="history"><div class="empty">履歴を読み込み中…</div></div><div class="actions"><button type="button" id="exportButton" class="secondary">バックアップを書き出す</button></div><div class="backup">バックアップはJSONファイルです。端末内の保存データが消える場合に備えて利用してください。</div><div class="import-wrap"><label class="fieldlabel" for="importFile">バックアップを復元（JSON）</label><input id="importFile" type="file" accept=".json,application/json"><div class="actions"><button type="button" class="secondary" id="importButton">選択したバックアップを取り込む</button></div><div class="safety-note">既存の記録は消さず、取り込んだ記録を別の履歴として追加します。同じバックアップを繰り返し取り込むと重複します。取り込み前に現在のバックアップを保存してください。</div></div></section>
+<div class="note">※ 保存先はKoderのプレビューで使うブラウザのlocalStorageです。URL・ブラウザ・保存領域が変わると履歴が見えなくなることがあります。重要な学習内容はバックアップしてください。</div>
+<div class="footer">0120' Learning OS · Ver.1.0</div>
+</main>
+<script>
+(function(){
+'use strict';
+var KEY='0120_learning_os_v4_records';
+var DRAFT='0120_learning_os_v4_draft';
+var OLD='0120_learning_os_v3_notes';
+var ids=['topic','memo0','memo1','memo2','memo3'];
+var records=[],activeId=null,storageOK=false,pending=null,loading=false;
+var searchTerm='',sortMode='recent';
+var status=document.getElementById('saveStatus');
+function msg(t){status.textContent=t;}
+function readFields(){var d={};ids.forEach(function(id){d[id]=document.getElementById(id).value;});return d;}
+function fillFields(d){loading=true;ids.forEach(function(id){document.getElementById(id).value=d&&typeof d[id]==='string'?d[id]:'';});loading=false;}
+function nonempty(d){return ids.some(function(id){return !!(d[id]||'').trim();});}
+function stamp(){return new Date().toISOString();}
+function uid(){return 'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,9);}
+function safeRead(k){var raw=localStorage.getItem(k);return raw?JSON.parse(raw):null;}
+function persist(){localStorage.setItem(KEY,JSON.stringify(records));}
+function draftSave(){if(!storageOK||loading)return;try{localStorage.setItem(DRAFT,JSON.stringify({activeId:activeId,data:readFields()}));if(activeId){var r=records.find(function(x){return x.id===activeId;});if(r){r.data=readFields();r.updated=stamp();persist();}}updateDashboard();msg('自動保存しました');}catch(e){msg('自動保存に失敗しました。バックアップを取ってください');}}
+function flush(){if(pending!==null){clearTimeout(pending);pending=null;}draftSave();}
+function schedule(){lastSnapshot=JSON.stringify(readFields());updateDashboard();if(!storageOK||loading)return;msg('入力中…');if(pending!==null)clearTimeout(pending);pending=setTimeout(function(){pending=null;draftSave();render();},500);}
+function completed(d){return ['memo0','memo1','memo2','memo3'].filter(function(k){return !!String((d||{})[k]||'').trim();}).length;}
+function percent(d){return completed(d)*25;}
+function updateReview(d){
+ var labels=['0｜受容','1｜論理化','2｜メタ認知',"0'｜統合"];
+ for(var i=0;i<4;i++){
+  var el=document.getElementById('review'+i);
+  var v=String(d['memo'+i]||'').trim();
+  el.textContent=v||'未記入';
+  el.className='review-content'+(v?'':' missing');
+ }
+ var n=completed(d),summary=document.getElementById('reviewSummary');
+ if(n===0){summary.textContent='まだメモがありません。0｜受容から疑問を書いてみましょう。';}
+ else if(n===4){summary.textContent='4段階すべてに記入があります。最初の疑問と最後のまとめを見比べ、説明がつながっているか確かめましょう。';}
+ else{summary.textContent='現在 '+n+'/4段階を記入しています。未記入の段階を確認し、必要なところから続きを書きましょう。';}
+ var first=String(d.memo0||'').trim(),last=String(d.memo3||'').trim();
+ document.getElementById('reviewQuestion').textContent=first&&last?'振り返りの問い：最初の疑問に、最後のまとめは答えている？ まだ残る疑問は？':'振り返りの問い：最初の疑問は、最後にどう変わった？';
+}
+function copyReview(){
+ var d=readFields();
+ var names=['0｜受容','1｜論理化','2｜メタ認知',"0'｜統合"];
+ var lines=["0120' Learning OS｜学習の振り返り",'テーマ：'+(d.topic.trim()||'無題の学習'),''];
+ for(var i=0;i<4;i++){lines.push(names[i]);lines.push(d['memo'+i].trim()||'（未記入）');lines.push('');}
+ var content=lines.join('\n');
+ var out=document.getElementById('reviewStatus');
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(content).then(function(){out.textContent='振り返りをコピーしました';},function(){fallbackCopy(content,out);});}
+ else{fallbackCopy(content,out);}
+}
+function fallbackCopy(content,out){
+ var t=document.createElement('textarea');t.value=content;t.style.position='fixed';t.style.left='-9999px';document.body.appendChild(t);t.select();
+ var ok=false;try{ok=document.execCommand('copy');}catch(e){}document.body.removeChild(t);
+ out.textContent=ok?'振り返りをコピーしました':'この環境ではコピーできません。画面のメモを選択してコピーしてください。';
+}
+function updateProcessMap(d){
+ var filled=0;
+ for(var i=0;i<4;i++){
+  var raw=String((d||{})['memo'+i]||'').trim();var has=raw.length>0;
+  if(has)filled++;
+  document.getElementById('processNode'+i).className='process-node'+(has?' filled':'');
+  document.getElementById('processState'+i).textContent=has?'記入済み':'未記入';
+  var el=document.getElementById('processText'+i);
+  el.textContent=has?raw:'まだメモがありません';
+  el.className='process-excerpt'+(has?'':' empty');
+ }
+ var topic=String((d||{}).topic||'').trim();
+ document.getElementById('processSummary').textContent=(topic?'「'+topic+'」：':'現在の学習：')+filled+'/4段階に記入済み。'+(filled===4?'4段階の記録がそろいました。':'未記入の段階はあと'+(4-filled)+'つです。');
+}
+function updateDashboard(){var d=readFields(),n=completed(d),pct=n*25;updateProcessMap(d);updateReview(d);document.getElementById('currentProgress').textContent=pct+'%（'+n+'/4段階）';document.getElementById('currentFill').style.width=pct+'%';document.getElementById('currentTrack').setAttribute('aria-valuenow',String(pct));var dots=document.getElementById('stepDots').children;for(var i=0;i<4;i++){dots[i].className='step-dot'+(String(d['memo'+i]||'').trim()?' done':'');}document.getElementById('totalRecords').textContent=records.length;var sum=records.reduce(function(a,r){return a+completed(r.data);},0);document.getElementById('filledStages').textContent=sum;document.getElementById('averageProgress').textContent=(records.length?Math.round(sum/records.length*25):0)+'%';}
+function titleOf(r){return (r.data.topic||'').trim()||'無題の学習';}
+function dateOf(s){var d=new Date(s);return isNaN(d.getTime())?'日時不明':d.toLocaleString('ja-JP',{year:'numeric',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});}
+function updateCurrent(){var r=records.find(function(x){return x.id===activeId;});document.getElementById('currentRecord').textContent=r?'編集中：'+titleOf(r):'新しい学習（未登録）';}
+function render(){updateCurrent();updateDashboard();var list=document.getElementById('history');document.getElementById('count').textContent=records.length+'件';list.textContent='';document.getElementById('historySummary').textContent='全'+records.length+'件';if(!records.length){var e=document.createElement('div');e.className='empty';e.textContent='まだ記録がありません。「記録を保存」で追加できます。';list.appendChild(e);return;}
+var visible=records.filter(function(r){var hay=[titleOf(r)].concat(ids.map(function(k){return String((r.data||{})[k]||'');})).join(' ').toLowerCase();return hay.indexOf(searchTerm)>=0;});
+visible.sort(function(a,b){if(sortMode==='old')return (a.updated||'').localeCompare(b.updated||'');if(sortMode==='title')return titleOf(a).localeCompare(titleOf(b),'ja');if(sortMode==='progressHigh')return percent(b.data)-percent(a.data)||(b.updated||'').localeCompare(a.updated||'');if(sortMode==='progressLow')return percent(a.data)-percent(b.data)||(b.updated||'').localeCompare(a.updated||'');return (b.updated||'').localeCompare(a.updated||'');});
+document.getElementById('historySummary').textContent='全'+records.length+'件中 '+visible.length+'件を表示';
+if(!visible.length){var empty=document.createElement('div');empty.className='empty';empty.textContent='検索条件に合う履歴はありません。';list.appendChild(empty);return;}
+visible.forEach(function(r){var box=document.createElement('div');box.className='entry'+(r.id===activeId?' active':'');var title=document.createElement('div');title.className='entry-title';title.textContent=titleOf(r);if(r.id===activeId){var tag=document.createElement('span');tag.className='tag';tag.textContent='編集中';title.appendChild(tag);}box.appendChild(title);var meta=document.createElement('div');meta.className='entry-meta';meta.textContent='更新：'+dateOf(r.updated);box.appendChild(meta);var pr=document.createElement('div');pr.className='entry-progress';var prText=document.createElement('div');prText.className='progress-text';prText.textContent='記入率 '+percent(r.data)+'%（'+completed(r.data)+'/4段階）';var track=document.createElement('div');track.className='progress-track';var fill=document.createElement('div');fill.className='progress-fill';fill.style.width=percent(r.data)+'%';track.appendChild(fill);pr.appendChild(prText);pr.appendChild(track);box.appendChild(pr);var actions=document.createElement('div');actions.className='actions';var open=document.createElement('button');open.type='button';open.className='secondary';open.textContent='開く・再編集';open.addEventListener('click',function(){openRecord(r.id);});var del=document.createElement('button');del.type='button';del.className='danger';del.textContent='削除';del.addEventListener('click',function(){deleteRecord(r.id);});actions.appendChild(open);actions.appendChild(del);box.appendChild(actions);list.appendChild(box);});}
+function saveRecord(){if(!storageOK){msg('保存領域が利用できません');return;}flush();var d=readFields();if(!nonempty(d)){msg('テーマかメモを入力してください');return;}try{var r=records.find(function(x){return x.id===activeId;});if(r){r.data=d;r.updated=stamp();}else{r={id:uid(),created:stamp(),updated:stamp(),data:d};records.push(r);activeId=r.id;}persist();localStorage.setItem(DRAFT,JSON.stringify({activeId:activeId,data:d}));render();msg('記録を保存しました（履歴：'+records.length+'件）');}catch(e){msg('記録の保存に失敗しました');}}
+function openRecord(id){if(!storageOK)return;flush();var r=records.find(function(x){return x.id===id;});if(!r)return;activeId=id;fillFields(r.data);document.getElementById('s0').checked=true;draftSave();render();msg('「'+titleOf(r)+'」を開きました。編集内容は自動保存されます');window.scrollTo(0,0);}
+function newRecord(){if(!storageOK){msg('保存領域が利用できません');return;}flush();if(activeId===null&&nonempty(readFields())&&!window.confirm('今の未登録メモを消して新しい学習を始めますか？'))return;activeId=null;fillFields(null);document.getElementById('s0').checked=true;draftSave();render();msg('新しい学習を開始しました。入力後「記録を保存」で履歴に追加できます');window.scrollTo(0,0);}
+function deleteRecord(id){if(!storageOK)return;var r=records.find(function(x){return x.id===id;});if(!r)return;if(!window.confirm('「'+titleOf(r)+'」を削除しますか？ この操作は元に戻せません。'))return;flush();records=records.filter(function(x){return x.id!==id;});if(activeId===id){activeId=null;fillFields(null);document.getElementById('s0').checked=true;}try{persist();localStorage.setItem(DRAFT,JSON.stringify({activeId:activeId,data:readFields()}));render();msg('履歴から削除しました');}catch(e){msg('削除の保存に失敗しました');}}
+function exportData(){if(!storageOK){msg('バックアップできません');return;}flush();try{var payload={app:'0120 Learning OS',version:9,exported:stamp(),records:records,draft:{activeId:activeId,data:readFields()}};var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='0120_learning_backup_'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url);},1000);msg('バックアップの書き出しを開始しました');}catch(e){msg('バックアップに失敗しました');}}
+try{var t=KEY+'_test';localStorage.setItem(t,'1');localStorage.removeItem(t);storageOK=true;var saved=safeRead(KEY);if(Array.isArray(saved))records=saved.filter(function(r){return r&&typeof r.id==='string'&&r.data&&typeof r.data==='object';});var draft=safeRead(DRAFT);if(draft&&draft.data){activeId=draft.activeId||null;fillFields(draft.data);msg('前回の学習メモを復元しました');}else if(records.length){msg('学習履歴を読み込みました');}else{var old=safeRead(OLD);if(old&&typeof old==='object'&&nonempty(old)){fillFields(old);localStorage.setItem(DRAFT,JSON.stringify({activeId:null,data:old}));msg('Ver.3のメモを引き継ぎました。「記録を保存」で履歴に登録してください');}else{msg('保存できます。入力すると自動保存されます');}}if(activeId&&!records.some(function(r){return r.id===activeId;}))activeId=null;render();}catch(e){storageOK=false;msg('この環境では保存できません。KoderのLocalからプレビューしてください');render();}
+
+var guidePrompts=[
+ ['今、何が一番分からない？','どこまでなら自分で説明できる？','このテーマで知りたいことは何？'],
+ ['確かに分かっている事実は何？','情報を条件・理由・結論に分けると？','まだ確認できていない前提は何？'],
+ ['自分の言葉で説明するとどうなる？','説明のどこに自信がない？','別の例でも同じ考え方が使える？'],
+ ['最初の疑問に今ならどう答える？','今回の学びを一文でまとめると？','次に調べたいことは何？']
+];
+Array.prototype.forEach.call(document.querySelectorAll('[data-guide]'),function(button){
+ button.addEventListener('click',function(){
+  var i=Number(button.getAttribute('data-guide'));
+  var j=Number(button.getAttribute('data-q'));
+  if(!guidePrompts[i]||!guidePrompts[i][j])return;
+  var field=document.getElementById('memo'+i);
+  var old=field.value;
+  field.value=old+(old.trim()?'\n\n':'')+'【問い】'+guidePrompts[i][j]+'\n';
+  field.dispatchEvent(new Event('input',{bubbles:true}));
+  document.getElementById('guideStatus'+i).textContent='質問をメモに追加しました';
+  field.focus();
+ });
+});
+document.getElementById('saveButton').addEventListener('click',saveRecord);
+document.getElementById('newButton').addEventListener('click',newRecord);
+document.getElementById('exportButton').addEventListener('click',exportData);
+document.getElementById('historySearch').addEventListener('input',function(){searchTerm=this.value.trim().toLowerCase();render();});
+document.getElementById('historySort').addEventListener('change',function(){sortMode=this.value;render();});
+function validImportRecord(r){if(!r||typeof r!=='object'||!r.data||typeof r.data!=='object'||Array.isArray(r.data))return false;return ids.every(function(k){return r.data[k]===undefined||typeof r.data[k]==='string';});}
+function importBackup(){
+ if(!storageOK){msg('この環境では復元できません');return;}
+ var file=document.getElementById('importFile').files[0];
+ if(!file){msg('JSONファイルを選択してください');return;}
+ if(file.size>2*1024*1024){msg('ファイルが大きすぎます（上限2MB）');return;}
+ var reader=new FileReader();
+ reader.onerror=function(){msg('ファイルを読み込めませんでした');};
+ reader.onload=function(){
+  var obj;try{obj=JSON.parse(reader.result);}catch(e){msg('JSON形式が正しくありません');return;}
+  if(!obj||obj.app!=="0120 Learning OS"||!Array.isArray(obj.records)||obj.records.length>5000||!obj.records.every(validImportRecord)){msg('0120 Learning OSの有効なバックアップではありません');return;}
+  var incoming=obj.records.map(function(r){var d={};ids.forEach(function(k){d[k]=String(r.data[k]||'').slice(0,100000);});return {id:uid(),created:typeof r.created==='string'?r.created:stamp(),updated:typeof r.updated==='string'?r.updated:stamp(),data:d};});
+  if(!incoming.length){msg('取り込める学習履歴がありません');return;}
+  if(!window.confirm(incoming.length+'件を追加します。既存の'+records.length+'件は維持します。よろしいですか？'))return;
+  flush();var oldRecords=records.slice();
+  try{records=records.concat(incoming);persist();render();msg(incoming.length+'件の学習履歴を追加しました');document.getElementById('importFile').value='';}
+  catch(e){records=oldRecords;msg('取り込みに失敗しました。保存容量を確認してください');}
+ };
+ reader.readAsText(file);
+}
+document.getElementById('importButton').addEventListener('click',importBackup);
+
+document.getElementById('copyReview').addEventListener('click',copyReview);
+document.getElementById('jumpReview').addEventListener('click',function(){document.getElementById('s3').checked=true;document.getElementById('p3').scrollIntoView({behavior:'smooth',block:'start'});});
+ids.forEach(function(id){var el=document.getElementById(id);el.addEventListener('input',schedule);el.addEventListener('change',schedule);el.addEventListener('keyup',schedule);});
+// Koder/iOSのWebViewでinputイベントが通知されない場合も進捗を更新する。
+var lastSnapshot=JSON.stringify(readFields());
+setInterval(function(){var now=JSON.stringify(readFields());if(now!==lastSnapshot){lastSnapshot=now;updateDashboard();if(storageOK&&!loading){if(pending!==null)clearTimeout(pending);pending=setTimeout(function(){pending=null;draftSave();render();},500);}}},400);
+
+// Ver.8: AIへの相談文をローカルで生成する。通信は行わない。
+function makeAIPrompt(){
+ var d=readFields();
+ var sections=[['0｜受容','疑問や分からないこと'],['1｜論理化','事実・根拠・仮説の整理'],['2｜メタ認知','理解の点検'],["0'｜統合",'自分なりのまとめ']];
+ var lines=[
+  "あなたは学習支援のアシスタントです。以下は『0120' Learning OS』で記録した学習メモです。",
+  '4段階の内容をもとに、学習者の理解を深めるための分析をしてください。',
+  'メモにない事実を勝手に補わず、不確かな点は不確かと明記してください。',
+  '回答では次の順に整理してください。',
+  '1. 最初の疑問と最後のまとめのつながり',
+  '2. 論理の飛躍や確認が必要な前提（あれば）',
+  '3. 理解を深めるための質問を3つ',
+  '4. 次に取り組める具体的な学習行動を1つ',
+  '学習者の考えを尊重し、断定的な採点は避けてください。',
+  '',
+  '【学習テーマ】',
+  (d.topic||'').trim()||'未入力',
+  ''
+ ];
+ sections.forEach(function(pair,i){lines.push('【'+pair[0]+'：'+pair[1]+'】');lines.push((d['memo'+i]||'').trim()||'未入力');lines.push('');});
+ return lines.join('\n');
+}
+function generateAIPrompt(){
+ document.getElementById('aiPrompt').value=makeAIPrompt();
+ document.getElementById('aiStatus').textContent='文章を生成しました。必要に応じて編集してからコピーしてください。';
+}
+function fallbackAICopy(t){
+ var field=document.getElementById('aiPrompt');field.focus();field.select();field.setSelectionRange(0,field.value.length);
+ var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+ document.getElementById('aiStatus').textContent=ok?'コピーしました。AIのチャット画面に貼り付けてください。':'自動コピーできませんでした。文章を選択した状態なので、iPhoneの「コピー」を使ってください。';
+}
+function copyAIPrompt(){
+ var t=document.getElementById('aiPrompt').value;
+ if(!t.trim()){document.getElementById('aiStatus').textContent='先に「文章を生成・更新」を押してください。';return;}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){document.getElementById('aiStatus').textContent='コピーしました。AIのチャット画面に貼り付けてください。';},function(){fallbackAICopy(t);});}
+ else fallbackAICopy(t);
+}
+document.getElementById('generateAI').addEventListener('click',generateAIPrompt);
+document.getElementById('copyAI').addEventListener('click',copyAIPrompt);
+document.getElementById('selectAI').addEventListener('click',function(){var e=document.getElementById('aiPrompt');e.focus();e.select();e.setSelectionRange(0,e.value.length);document.getElementById('aiStatus').textContent='文章を選択しました。必要ならiPhoneのコピー操作を使ってください。';});
+
+Array.prototype.forEach.call(document.querySelectorAll('[data-process-step]'),function(button){
+ button.addEventListener('click',function(){
+  var index=Number(button.getAttribute('data-process-step'));
+  var tab=document.getElementById('s'+index);
+  if(tab){tab.checked=true;document.getElementById('p'+index).scrollIntoView({behavior:'smooth',block:'start'});}
+ });
+});
+window.addEventListener('pagehide',function(){if(storageOK)flush();});
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function(e){console.warn('Offline cache unavailable',e);}); });
+}
+</script>
+</body>
+</html>
